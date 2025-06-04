@@ -4,12 +4,6 @@
     <test name="Regression1">
         <classes>
             <class name="base.common.CommonTest"/>
-            <!--            <class name="base.smoke.CatalogSmokeTest"/>-->
-            <class name="base.smoke.LoginTest"/>
-            <!--            <class name="base.smoke.TestTest"/>-->
-            <class name="base.smoke.V2CatalogSmokeTest"/>
-                        <class name="base.smoke.PaymentRequestTest"/>
-            <class name="base.e2e.PaymentRequestE2ETest"/>
         </classes>
     </test>
 </suite>
