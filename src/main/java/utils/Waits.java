@@ -133,8 +133,6 @@ public class Waits {
          new WebDriverWait(getDriver(), PAGE_LOAD_WAIT).until(
                  d -> ((JavascriptExecutor) d).executeScript("return document.styleSheets.length > 0;")
          );
-         WebDriverWait wait = new WebDriverWait(getDriver(), ELEMENT_VISIBLE_WAIT);
-         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("[data-qa]")));
       } else {
          new WebDriverWait(getDriver(), PAGE_LOAD_WAIT).until(
                  d -> ((JavascriptExecutor) d).executeScript("return document.readyState==\"complete\";")
@@ -142,13 +140,6 @@ public class Waits {
          new WebDriverWait(getDriver(), PAGE_LOAD_WAIT).until(
                  d -> ((JavascriptExecutor) d).executeScript("return document.styleSheets.length > 0;")
          );
-         WebDriverWait wait = new WebDriverWait(getDriver(), ELEMENT_VISIBLE_WAIT);
-         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.cssSelector("[data-qa]")));
-//         try {
-//            Thread.sleep(8000);
-//         } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//         }
       }
    }
 

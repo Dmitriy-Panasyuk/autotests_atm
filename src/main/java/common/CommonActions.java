@@ -78,7 +78,7 @@ public class CommonActions {
       ChromeOptions options = new ChromeOptions();
       options.addArguments("--incognito");
       options.addArguments("--disable-dev-shm-usage");
-
+      options.addArguments("-ignore-certificate-errors");
       LoggingPreferences logPrefs = new LoggingPreferences();
       logPrefs.enable(LogType.BROWSER, Level.ALL);
 //      options.setCapability(LOGGING_PREFS, logPrefs);
@@ -89,7 +89,6 @@ public class CommonActions {
 //            clearCookie();
             JS.js = (JavascriptExecutor) driver;
             Log.println("Current HOME = " + PageURL.HOME);
-            Log.println("Current PAYMENT = " + PageURL.PAYMENT);
             break;
          case "Linux":
             Log.println("==== Platform: Linux");
