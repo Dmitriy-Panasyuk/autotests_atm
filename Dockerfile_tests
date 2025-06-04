@@ -1,0 +1,17 @@
+FROM reg.svn.ru/jgr/autotest-dist
+
+WORKDIR /app
+COPY . .
+
+RUN mkdir /root/.m2 \
+ && cp /app/settings.xml /root/.m2
+
+# Устанавливаем переменные окружения для headless Chrome
+ENV CHROME_BIN=/usr/bin/google-chrome
+ARG SERV_URL="-"
+ENV SERV_URL=$SERV_URL
+ARG TEST_SUITE="-"
+ENV TEST_SUITE=$TEST_SUITE
+
+# Запускаем тесты и генерируем отчет Allure
+CMD ["sh", "-c", "mvn test"]

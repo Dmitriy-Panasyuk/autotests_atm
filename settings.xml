@@ -1,0 +1,13 @@
+<settings>
+    <activeProfiles>
+        <activeProfile>${env.TEST_SUITE}</activeProfile>
+    </activeProfiles>
+    <mirrors>
+        <mirror>
+            <id>main-mirror</id>
+            <name>S7 main maven mirror</name>
+            <url>https://***/repository/epaas-maven-proxy/</url>
+            <mirrorOf>central</mirrorOf>
+        </mirror>
+    </mirrors>
+</settings>

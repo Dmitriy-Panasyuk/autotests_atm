@@ -1,0 +1,369 @@
+.login_reg_docker: &login_reg_docker
+  - echo "Docker login"
+  - echo $CI_PROJECT_DIR
+  - echo $DOCKER_REGISTRY
+  - echo $DOCKER_AUTH_LOGIN
+  - echo $DOCKER_AUTH_PASSWORD
+  - sudo echo $DOCKER_AUTH_PASSWORD | sudo docker login --username robot\$store --password-stdin $DOCKER_REGISTRY
+
+
+
+stages:
+  - kill_old_image
+  - build_image
+  - run_container
+  - add_artifact
+  - stop_container
+  - kill_container
+
+# ================================================================================
+# prj FEATURE store24
+# ================================================================================
+kill_old_image:test:feature:
+  stage: kill_old_image
+  tags:
+    - store
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "main"
+      allow_failure: true
+  script:
+    - sudo docker image remove -f autotest-prj
+
+build_image:test:feature:
+  stage: build_image
+  tags:
+    - store
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "main"
+      allow_failure: true
+  before_script:
+    - *login_reg_docker
+  needs:
+    - job: kill_old_image:test:feature
+  script:
+    - sudo docker build --build-arg SERV_URL="http://999.99.9.99" --build-arg TEST_SUITE="all" -t autotest-prj --network host -f Dockerfile_tests .
+
+run_container:test:feature:
+  stage: run_container
+  tags:
+    - store
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "main"
+      allow_failure: true
+  script:
+    - sudo rm -rf /home/autotest/resultHTML/
+    - sudo mkdir /home/autotest/resultHTML/
+    - sudo docker run -v /home/autotest/resultHTML/:/app/allure-results/ReportHTML/ --env TEST_SUITE="all" --network host --name autotest-tests-prj autotest-prj
+
+add_artifact:test:feature:
+  stage: add_artifact
+  tags:
+    - store
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "main"
+      allow_failure: true
+  needs:
+    - job: run_container:test:feature
+  script:
+    - sudo echo "Add artifact"
+    - mkdir ./resultHTML
+    - cp /home/autotest/resultHTML/index.html ./resultHTML
+  artifacts:
+    name: Report_atm_autotest
+    paths:
+      - ./resultHTML/index.html
+    when: always
+
+
+stop_container:test:feature:
+  stage: stop_container
+  tags:
+    - store
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "main"
+      allow_failure: true
+  needs:
+    - job: add_artifact:test:feature
+  script:
+    - sudo rm -rf ./resultHTML
+    - sudo rm /home/autotest/resultHTML/index.html
+    - sudo docker stop autotest-tests-prj
+
+kill_container:test:feature:
+  stage: kill_container
+  tags:
+    - store
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "main"
+  needs:
+    - job: stop_container:test:feature
+  script:
+    - sudo docker rm -f autotest-tests-prj
+
+# =================================================================================
+# prj DEV atest611
+# =================================================================================
+
+kill_old_image:test:dev:
+  stage: kill_old_image
+  tags:
+    - atest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "main"
+      allow_failure: true
+  script:
+    - sudo docker image remove -f autotest-dev-prj
+
+build_image:test:dev:
+  stage: build_image
+  tags:
+    - atest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "main"
+      allow_failure: true
+  before_script:
+    - *login_reg_docker
+  needs:
+    - job: kill_old_image:test:dev
+  script:
+    - sudo docker build --build-arg SERV_URL="http://999.99.9.98" --build-arg TEST_SUITE="all" -t autotest-dev-prj --network host -f Dockerfile_tests .
+
+run_container:test:dev:
+  stage: run_container
+  tags:
+    - atest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "main"
+      allow_failure: true
+  script:
+    - sudo rm -rf /usr/app/atmosphere/autotest/resultHTML/
+    - sudo mkdir /usr/app/atmosphere/autotest/resultHTML/
+    - sudo docker run -v /usr/app/atmosphere/autotest/resultHTML/:/app/allure-results/ReportHTML/ --env TEST_SUITE="all" --network host --name autotest-dev-prj autotest-dev-prj
+
+add_artifact:test:dev:
+  stage: add_artifact
+  tags:
+    - atest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "main"
+      allow_failure: true
+  needs:
+    - job: run_container:test:dev
+  script:
+    - sudo echo "Add artifact"
+    - mkdir ./resultHTML
+    - cp /usr/app/atmosphere/autotest/resultHTML/index.html ./resultHTML
+  artifacts:
+    name: Report_atm_autotest_dev
+    paths:
+      - ./resultHTML/index.html
+    when: always
+
+
+stop_container:test:dev:
+  stage: stop_container
+  tags:
+    - atest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "main"
+      allow_failure: true
+  needs:
+    - job: add_artifact:test:dev
+  script:
+    - sudo rm -rf ./resultHTML
+    - sudo rm /usr/app/atmosphere/autotest/resultHTML/index.html
+    - sudo docker stop autotest-dev-prj
+
+kill_container:test:dev:
+  stage: kill_container
+  tags:
+    - atest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH != "main"
+  needs:
+    - job: stop_container:test:dev
+  script:
+    - sudo docker rm -f autotest-dev-prj
+
+# ===============================================================================
+# FEATURE store24
+# ===============================================================================
+kill_old_image:feature:
+  stage: kill_old_image
+  tags:
+    - store
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+      allow_failure: true
+  script:
+    - sudo docker image remove -f autotest
+
+build_image:feature:
+  stage: build_image
+  tags:
+    - store
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+      allow_failure: true
+  before_script:
+    - *login_reg_docker
+  needs:
+    - job: kill_old_image:feature
+  script:
+    - sudo docker build --build-arg SERV_URL="http://999.99.9.99" --build-arg TEST_SUITE="all" -t autotest --network host -f Dockerfile_tests .
+
+run_container:feature:
+  stage: run_container
+  tags:
+    - store
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+      allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $interval == "every_day_5_00_feature"
+      allow_failure: true
+  script:
+    - sudo rm -rf /home/autotest/resultHTML/
+    - sudo mkdir /home/autotest/resultHTML/
+    - sudo docker run -v /home/autotest/resultHTML/:/app/allure-results/ReportHTML/ --env TEST_SUITE="all" --network host --name autotest-tests autotest
+
+add_artifact:feature:
+  stage: add_artifact
+  tags:
+    - store
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+      allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $interval == "every_day_5_00_feature"
+      allow_failure: true
+  needs:
+    - job: run_container:feature
+  script:
+    - sudo echo "Add artifact"
+    - mkdir ./resultHTML
+    - cp /home/autotest/resultHTML/index.html ./resultHTML
+  artifacts:
+    name: Report_atm_autotest
+    paths:
+      - ./resultHTML/index.html
+    when: always
+
+
+stop_container:feature:
+  stage: stop_container
+  tags:
+    - store
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+      allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $interval == "every_day_5_00_feature"
+      allow_failure: true
+  needs:
+    - job: add_artifact:feature
+  script:
+    - sudo rm -rf ./resultHTML
+    - sudo rm /home/autotest/resultHTML/index.html
+    - sudo docker stop autotest-tests
+
+kill_container:feature:
+  stage: kill_container
+  tags:
+    - store
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $interval == "every_day_5_00_feature"
+  needs:
+    - job: stop_container:feature
+  script:
+    - sudo docker rm -f autotest-tests
+
+# =================================================================================
+# DEV atest611
+# =================================================================================
+
+kill_old_image:dev:
+  stage: kill_old_image
+  tags:
+    - atest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+      allow_failure: true
+  script:
+    - sudo docker image remove -f autotest-dev
+
+build_image:dev:
+  stage: build_image
+  tags:
+    - atest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+      allow_failure: true
+  before_script:
+    - *login_reg_docker
+  needs:
+    - job: kill_old_image:dev
+  script:
+    - sudo docker build --build-arg SERV_URL="http://999.99.9.98" --build-arg TEST_SUITE="all" -t autotest-dev --network host -f Dockerfile_tests .
+
+run_container:dev:
+  stage: run_container
+  tags:
+    - atest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+      allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $interval == "every_day_5_00_dev"
+      allow_failure: true
+  script:
+    - sudo rm -rf /usr/app/atmosphere/autotest/resultHTML/
+    - sudo mkdir /usr/app/atmosphere/autotest/resultHTML/
+    - sudo docker run -v /usr/app/atmosphere/autotest/resultHTML/:/app/allure-results/ReportHTML/ --env TEST_SUITE="all" --network host --name autotest-tests-dev autotest-dev
+
+add_artifact:dev:
+  stage: add_artifact
+  tags:
+    - atest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+      allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $interval == "every_day_5_00_dev"
+      allow_failure: true
+  needs:
+    - job: run_container:dev
+  script:
+    - sudo echo "Add artifact"
+    - mkdir ./resultHTML
+    - cp /usr/app/atmosphere/autotest/resultHTML/index.html ./resultHTML
+  artifacts:
+    name: Report_atm_autotest_dev
+    paths:
+      - ./resultHTML/index.html
+    when: always
+
+
+stop_container:dev:
+  stage: stop_container
+  tags:
+    - atest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+      allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $interval == "every_day_5_00_dev"
+      allow_failure: true
+  needs:
+    - job: add_artifact:dev
+  script:
+    - sudo rm -rf ./resultHTML
+    - sudo rm /usr/app/atmosphere/autotest/resultHTML/index.html
+    - sudo docker stop autotest-tests-dev
+
+kill_container:dev:
+  stage: kill_container
+  tags:
+    - atest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "main"
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $interval == "every_day_5_00_dev"
+  needs:
+    - job: stop_container:dev
+  script:
+    - sudo docker rm -f autotest-tests-dev

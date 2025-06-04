@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <groupId>org</groupId>
+    <artifactId>autotests</artifactId>
+    <version>0.9.9.1</version>
+    <packaging>jar</packaging>
+
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <allure-bom.version>2.27.0</allure-bom.version>
+        <selenium-java.version>4.25.0</selenium-java.version>
+        <allure-testng.version>2.27.0</allure-testng.version>
+        <postgresql.version>42.7.3</postgresql.version>
+        <slf4j-simple.version>2.0.13</slf4j-simple.version>
+        <testng.version>6.11</testng.version>
+        <allure-maven.version>2.11.2</allure-maven.version>
+        <allure-maven.reportVersion>2.17.3</allure-maven.reportVersion>
+        <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
+        <aspectjweaver.version>1.9.20.1</aspectjweaver.version>
+        <exclude.package>NoTestIsExcludedFromTheTestSuit</exclude.package>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>smoke</id>
+            <properties>
+                <exclude.package>**/e2e/*</exclude.package>
+            </properties>
+        </profile>
+        <profile>
+            <id>e2e</id>
+            <properties>
+                <exclude.package>**/smoke/*</exclude.package>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-bom</artifactId>
+                <version>${allure-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium-java.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+            <version>${allure-testng.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j-simple.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+
+    <build>
+        <!--        <sourceDirectory>./src</sourceDirectory>-->
+        <!--        <directory>c:\***\IdeaProjects\autotests\out\artifacts\autotests_jar\</directory>-->
+        <!--        <testSourceDirectory>src/test/java</testSourceDirectory>-->
+        <!--        <resources>-->
+        <!--            <resource>-->
+        <!--                <directory>src/test/resources</directory>-->
+        <!--            </resource>-->
+        <!--            <resource>-->
+        <!--                <directory>src/main/resources</directory>-->
+        <!--            </resource>-->
+        <!--        </resources>-->
+        <plugins>
+
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>${allure-maven.version}</version>
+                <configuration>
+                    <!--                    <reportVersion>${allure-maven.reportVersion}</reportVersion>-->
+                    <!--                    <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>-->
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectjweaver.version}/aspectjweaver-${aspectjweaver.version}.jar"
+                    </argLine>
+                    <suiteXmlFiles>
+<!--                        <suiteXmlFile>testng.xml</suiteXmlFile>-->
+                    </suiteXmlFiles>
+                    <excludes>
+                        <exclude>${exclude.package}</exclude>
+                        <exclude>**/TestTest.java</exclude>
+
+                                                <exclude>**/CatalogSmokeTest.java</exclude>
+                                                <exclude>**/CatalogE2ETest.java</exclude>
+
+
+<!--                                                <exclude>**/V2CatalogSmokeTest.java</exclude>-->
+<!--                                                <exclude>**/LoginTest.java</exclude>-->
+<!--                                                <exclude>**/PaymentRequestTest.java</exclude>-->
+
+                        <!--                        <exclude>**/PaymentRequestE2ETest.java</exclude>-->
+
+                    </excludes>
+                    <skipAfterFailureCount>9999</skipAfterFailureCount>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectjweaver.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+</project>
