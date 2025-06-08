@@ -18,7 +18,7 @@ import static utils.AllureAttachmentTools.attachScreenshotPNG;
 @Listeners({Listner.class})
 public class ButtonDynamicIDTest {
 
-    @BeforeClass(description = "До проверки справочников")
+    @BeforeClass(description = "Предусловия")
     public void beforeClass() {
         try {
             Log.printClassTitle(getClass().getSimpleName());
@@ -46,7 +46,7 @@ public class ButtonDynamicIDTest {
         assertNotEquals(initialID,changedID);
     }
 
-    @AfterClass(alwaysRun = true, description = "После проверки справочников")
+    @AfterClass(alwaysRun = true, description = "Постусловия")
     public void logout() {
         try {
             Log.printClassTitle(getClass().getSimpleName());

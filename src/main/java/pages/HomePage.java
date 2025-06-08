@@ -16,7 +16,8 @@ public class HomePage extends BasePage {
    }
 
    public enum buttons {
-      DYNAMIC_ID
+      DYNAMIC_ID,
+      MULTICLASS
    }
 
    public enum labels {
@@ -51,6 +52,9 @@ public class HomePage extends BasePage {
          case DYNAMIC_ID:
             bys.add(By.tagName("a"));
             return new ButtonElement(bys, "Dynamic ID", true, "Кнопка перехода на страницу Dynamic ID");
+         case MULTICLASS:
+            bys.add(By.tagName("a"));
+            return new ButtonElement(bys, "Class Attribute", true, "Кнопка перехода на страницу Class Attribute");
       }
       return new ButtonElement(bys);
    }
