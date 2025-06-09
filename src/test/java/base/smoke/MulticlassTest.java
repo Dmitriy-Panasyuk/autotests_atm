@@ -31,9 +31,9 @@ public class MulticlassTest {
     }
 
 
-    @Test(enabled = true, description = "Найти кнопку WARNING на странице.", priority = 3)
+    @Test(enabled = true, description = "Найти кнопку WARNING на странице.", priority = 2003)
     @Description("Тест входит на страницу с кнопкой и проверяет ее наличие. Кнопка имеет более одного элемента класса.")
-    @Step("Найти кнопку на странице.")
+    @Step("Найти кнопку WARNING на странице.")
     @Severity(NORMAL)
     @Feature("Smoke тесты")
     @Story("Простые тесты")
@@ -41,9 +41,9 @@ public class MulticlassTest {
         assertNotNull(Multiclass.get(Multiclass.buttons.WARNING).getWebElement());
     }
 
-    @Test(enabled = true, description = "Найти кнопку SUCCESS на странице.", priority = 2)
+    @Test(enabled = true, description = "Найти кнопку SUCCESS на странице.", priority = 2002)
     @Description("Тест входит на страницу с кнопкой, проверяет ее наличие, проверяет что кнопка имеет класс отличный от того что применялся для поиска. Кнопка имеет более одного элемента класса.")
-    @Step("Найти кнопку на странице.")
+    @Step("Найти кнопку SUCCESS на странице.")
     @Severity(NORMAL)
     @Feature("Smoke тесты")
     @Story("Простые тесты")
@@ -52,9 +52,9 @@ public class MulticlassTest {
         assertNotNull(webElement);
     }
 
-    @Test(enabled = true, description = "Найти кнопку PRIMARY на странице.", priority = 1)
+    @Test(enabled = true, description = "Найти кнопку PRIMARY на странице.", priority = 2001)
     @Description("Тест входит на страницу с кнопкой и проверяет ее наличие. Кнопка имеет более одного элемента класса.")
-    @Step("Найти кнопку на странице.")
+    @Step("Найти кнопку PRIMARY на странице.")
     @Severity(NORMAL)
     @Feature("Smoke тесты")
     @Story("Простые тесты")
@@ -63,7 +63,7 @@ public class MulticlassTest {
     }
 
     @AfterClass(alwaysRun = true, description = "Постусловия")
-    public void logout() {
+    public void afterClass() {
         try {
             Log.printClassTitle(getClass().getSimpleName());
         } catch (Exception ex) {

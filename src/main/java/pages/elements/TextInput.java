@@ -1,6 +1,7 @@
 package pages.elements;
 
 import elements.ButtonElement;
+import elements.InputElement;
 import org.openqa.selenium.By;
 import pages.BasePage;
 import pages.PageURL;
@@ -9,17 +10,15 @@ import java.util.ArrayList;
 
 import static common.CommonActions.getDriver;
 
-public class Multiclass extends BasePage {
-    private static String URL = PageURL.MULTICLASS;
+public class TextInput extends BasePage {
+    private static String URL = PageURL.TEXT_INPUT;
 
     public enum inputs {
-
+        NEW_BUTTON_NAME
     }
 
     public enum buttons {
-        WARNING,
-        SUCCESS,
-        PRIMARY
+        BUTTON
     }
 
     public enum labels {
@@ -55,17 +54,20 @@ public class Multiclass extends BasePage {
     public static ButtonElement get(buttons element) {
         ArrayList<By> bys = new ArrayList<>();
         switch (element) {
-            case WARNING:
-                bys.add(By.cssSelector("[class*='btn-warning']"));
-                return new ButtonElement(bys, "Кнопка warning");
-            case SUCCESS:
-                bys.add(By.cssSelector("[class*='btn-success']"));
-                return new ButtonElement(bys, "Кнопка success");
-            case PRIMARY:
-                bys.add(By.cssSelector("[class*='btn-primary btn-test']"));
-                return new ButtonElement(bys, "Кнопка primary");
-
+            case BUTTON:
+                bys.add(By.cssSelector("[class*='btn-primary']"));
+                return new ButtonElement(bys, "Кнопка в которой меняется текст");
         }
         return new ButtonElement(bys);
     }
+    public static InputElement get(inputs element) {
+        ArrayList<By> bys = new ArrayList<>();
+        switch (element) {
+            case NEW_BUTTON_NAME:
+                bys.add(By.tagName("input"));
+                return new InputElement(bys, "Ввод нового текста кнопки");
+        }
+        return new InputElement(bys);
+    }
 }
+

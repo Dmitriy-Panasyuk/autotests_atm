@@ -1,6 +1,7 @@
 package pages.elements;
 
 import elements.ButtonElement;
+import elements.LabelElement;
 import org.openqa.selenium.By;
 import pages.BasePage;
 import pages.PageURL;
@@ -9,19 +10,21 @@ import java.util.ArrayList;
 
 import static common.CommonActions.getDriver;
 
-public class DynamicID  extends BasePage{
-    private static String URL = PageURL.DYNAMIC_ID;
+public class ProgressBar extends BasePage {
+    private static String URL = PageURL.PROGRESS_BAR;
 
     public enum inputs {
 
     }
 
     public enum buttons {
-        DYNAMIC_ID
+        START,
+        STOP
     }
 
     public enum labels {
-
+        PROGRESS,
+        RESULT
     }
 
     /**
@@ -30,6 +33,7 @@ public class DynamicID  extends BasePage{
     public static void open() {
         BasePage.open(URL);
     }
+
     public static void refreshPage() {
         getDriver().navigate().refresh();
     }
@@ -52,10 +56,27 @@ public class DynamicID  extends BasePage{
     public static ButtonElement get(buttons element) {
         ArrayList<By> bys = new ArrayList<>();
         switch (element) {
-            case DYNAMIC_ID:
+            case START:
                 bys.add(By.cssSelector("[class*='btn-primary']"));
-                return new ButtonElement(bys,  "Кнопка с динамическим ID");
+                return new ButtonElement(bys, "Начать прогресс");
+            case STOP:
+                bys.add(By.cssSelector("[class*='btn-info']"));
+                return new ButtonElement(bys, "Остановить прогресс");
+
         }
         return new ButtonElement(bys);
     }
+    public static LabelElement get(labels element) {
+        ArrayList<By> bys = new ArrayList<>();
+        switch (element) {
+            case PROGRESS:
+                bys.add(By.id("progressBar"));
+                return new LabelElement(bys, "Progress Bar");
+            case RESULT:
+                bys.add(By.id("result"));
+                return new LabelElement(bys, "Progress Bar");
+        }
+        return new LabelElement(bys);
+    }
 }
+

@@ -267,9 +267,7 @@ public class TableElement extends BaseElement {
                bys.add(By.cssSelector("[aria-label*='Отфильтровать по']"));
                return new ButtonElement(bys, "Фильтр", Visibility.INVISIBLE);
             case ROW_v1:
-               bys.add(By.cssSelector("[data-id]"));
-               bys.add(By.cssSelector("[aria-rowindex]"));
-               bys.add(By.className("MuiDataGrid-row"));
+               bys.add(By.cssSelector("[role='row']"));
                return new ButtonElement(bys, "Строка таблицы", Visibility.INVISIBLE);
             case ROW_v2:
                bys.add(By.cssSelector("[data-index]"));

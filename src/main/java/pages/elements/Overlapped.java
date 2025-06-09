@@ -1,6 +1,6 @@
 package pages.elements;
 
-import elements.ButtonElement;
+import elements.InputElement;
 import org.openqa.selenium.By;
 import pages.BasePage;
 import pages.PageURL;
@@ -9,17 +9,16 @@ import java.util.ArrayList;
 
 import static common.CommonActions.getDriver;
 
-public class Multiclass extends BasePage {
-    private static String URL = PageURL.MULTICLASS;
+public class Overlapped extends BasePage {
+    private static String URL = PageURL.OVERLOPPED;
 
     public enum inputs {
-
+ID,
+        NAME
     }
 
     public enum buttons {
-        WARNING,
-        SUCCESS,
-        PRIMARY
+
     }
 
     public enum labels {
@@ -32,7 +31,6 @@ public class Multiclass extends BasePage {
     public static void open() {
         BasePage.open(URL);
     }
-
     public static void refreshPage() {
         getDriver().navigate().refresh();
     }
@@ -52,20 +50,17 @@ public class Multiclass extends BasePage {
      * @param element
      * @return
      */
-    public static ButtonElement get(buttons element) {
+    public static InputElement get(inputs element) {
         ArrayList<By> bys = new ArrayList<>();
         switch (element) {
-            case WARNING:
-                bys.add(By.cssSelector("[class*='btn-warning']"));
-                return new ButtonElement(bys, "Кнопка warning");
-            case SUCCESS:
-                bys.add(By.cssSelector("[class*='btn-success']"));
-                return new ButtonElement(bys, "Кнопка success");
-            case PRIMARY:
-                bys.add(By.cssSelector("[class*='btn-primary btn-test']"));
-                return new ButtonElement(bys, "Кнопка primary");
-
+            case ID:
+                bys.add(By.id("id"));
+                return new InputElement(bys, "Ввод ID");
+            case NAME:
+                bys.add(By.id("name"));
+                return new InputElement(bys, "Ввод NAME");
         }
-        return new ButtonElement(bys);
+        return new InputElement(bys);
     }
 }
+

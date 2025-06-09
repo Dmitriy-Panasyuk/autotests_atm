@@ -29,7 +29,7 @@ public class ButtonDynamicIDTest {
     }
 
 
-    @Test(enabled = true, description = "Нажать на кнопку с динамическим id.", priority = 1)
+    @Test(enabled = true, description = "Нажать на кнопку с динамическим id.", priority = 1001)
     @Description("Тест входит на страницу с кнопкой, презагружает страницу, проверяет что у кнопки поменялся id.")
     @Step("Нажать на кнопку с динамическим id.")
     @Severity(NORMAL)
@@ -47,7 +47,7 @@ public class ButtonDynamicIDTest {
     }
 
     @AfterClass(alwaysRun = true, description = "Постусловия")
-    public void logout() {
+    public void afterClass() {
         try {
             Log.printClassTitle(getClass().getSimpleName());
         } catch (Exception ex) {

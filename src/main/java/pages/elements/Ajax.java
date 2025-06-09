@@ -1,6 +1,7 @@
 package pages.elements;
 
 import elements.ButtonElement;
+import elements.LabelElement;
 import org.openqa.selenium.By;
 import pages.BasePage;
 import pages.PageURL;
@@ -9,21 +10,19 @@ import java.util.ArrayList;
 
 import static common.CommonActions.getDriver;
 
-public class Multiclass extends BasePage {
-    private static String URL = PageURL.MULTICLASS;
+public class Ajax extends BasePage {
+    private static String URL = PageURL.AJAX_DATA;
 
     public enum inputs {
 
     }
 
     public enum buttons {
-        WARNING,
-        SUCCESS,
-        PRIMARY
+        AJAX
     }
 
     public enum labels {
-
+        AJAX_SUCCESS
     }
 
     /**
@@ -55,17 +54,20 @@ public class Multiclass extends BasePage {
     public static ButtonElement get(buttons element) {
         ArrayList<By> bys = new ArrayList<>();
         switch (element) {
-            case WARNING:
-                bys.add(By.cssSelector("[class*='btn-warning']"));
-                return new ButtonElement(bys, "Кнопка warning");
-            case SUCCESS:
-                bys.add(By.cssSelector("[class*='btn-success']"));
-                return new ButtonElement(bys, "Кнопка success");
-            case PRIMARY:
-                bys.add(By.cssSelector("[class*='btn-primary btn-test']"));
-                return new ButtonElement(bys, "Кнопка primary");
-
+            case AJAX:
+                bys.add(By.cssSelector("[class*='btn-primary']"));
+                return new ButtonElement(bys, "Кнопка запускающая AJAX-запрос");
         }
         return new ButtonElement(bys);
+    }
+
+    public static LabelElement get(labels element) {
+        ArrayList<By> bys = new ArrayList<>();
+        switch (element) {
+            case AJAX_SUCCESS:
+                bys.add(By.cssSelector("[class*='bg-success']"));
+                return new LabelElement(bys, "Data loaded with AJAX get request.");
+        }
+        return new LabelElement(bys);
     }
 }

@@ -9,17 +9,16 @@ import java.util.ArrayList;
 
 import static common.CommonActions.getDriver;
 
-public class Multiclass extends BasePage {
-    private static String URL = PageURL.MULTICLASS;
+public class Click extends BasePage {
+    private static String URL = PageURL.CLICK;
 
     public enum inputs {
 
     }
 
     public enum buttons {
-        WARNING,
-        SUCCESS,
-        PRIMARY
+        PRIMARY,
+        SUCCESS
     }
 
     public enum labels {
@@ -55,17 +54,14 @@ public class Multiclass extends BasePage {
     public static ButtonElement get(buttons element) {
         ArrayList<By> bys = new ArrayList<>();
         switch (element) {
-            case WARNING:
-                bys.add(By.cssSelector("[class*='btn-warning']"));
-                return new ButtonElement(bys, "Кнопка warning");
             case SUCCESS:
                 bys.add(By.cssSelector("[class*='btn-success']"));
                 return new ButtonElement(bys, "Кнопка success");
             case PRIMARY:
-                bys.add(By.cssSelector("[class*='btn-primary btn-test']"));
+                bys.add(By.cssSelector("[class*='btn-primary']"));
                 return new ButtonElement(bys, "Кнопка primary");
-
         }
         return new ButtonElement(bys);
     }
 }
+
